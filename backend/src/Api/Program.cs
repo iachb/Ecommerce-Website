@@ -1,6 +1,10 @@
+using Ecommerce.Application;
+using Ecommerce.Application.Extensions;
+using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Domain;
 using Ecommerce.Infrastructure;
 using Ecommerce.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -10,11 +14,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Ecommerce.Application.Extensions;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 // DB connection
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
@@ -24,10 +30,17 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
     )
 );
 
+// MediatR
+builder.Services.AddMediatR(typeof(GetProductListQueryHandler).Assembly);
+
+// Controllers with global authorization filter
 builder.Services.AddControllers(opt =>
 {
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     opt.Filters.Add(new AuthorizeFilter(policy));
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 // Register FluentEmail and EmailFluentSettings
@@ -59,6 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
@@ -66,6 +80,8 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
     );
 });
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -86,6 +102,7 @@ app.UseCors("CorsPolicy");
 
 app.MapControllers();
 
+// Application initialization
 using (var scope = app.Services.CreateScope())
 {
     var service = scope.ServiceProvider;
