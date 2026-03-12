@@ -4,7 +4,7 @@
     {
         public string? Search { get; set; }
         public string? Sort { get; set; }
-        public int Index { get; set; } = 1;
+        public int PageIndex { get; set; } = 1;
         private int _pageSize = 3;
         private int MaxPageSize = 50;
         public int PageSize

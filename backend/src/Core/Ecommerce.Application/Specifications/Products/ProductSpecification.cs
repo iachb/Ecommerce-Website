@@ -11,10 +11,10 @@ namespace Ecommerce.Application.Specifications.Products
                     (string.IsNullOrEmpty(productParams.Search) || x.Name!.Contains(productParams.Search)
                         || x.Description!.Contains(productParams.Search)
                     ) &&
-                    (productParams.CategoryId.HasValue || x.CategoryId == productParams.CategoryId) &&
-                    (productParams.MinPrice.HasValue || x.Price >= productParams.MinPrice) &&
-                    (productParams.MaxPrice.HasValue || x.Price <= productParams.MaxPrice) &&
-                    (productParams.Status.HasValue || x.Status == productParams.Status)
+                    (!productParams.CategoryId.HasValue || x.CategoryId == productParams.CategoryId) &&
+                    (!productParams.MinPrice.HasValue || x.Price >= productParams.MinPrice) &&
+                    (!productParams.MaxPrice.HasValue || x.Price <= productParams.MaxPrice) &&
+                    (!productParams.Status.HasValue || x.Status == productParams.Status)
             )
         {
             AddInclude(x => x.Reviews!);
