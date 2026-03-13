@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.Features.Products.Queries.GetProductList;
+﻿using Ecommerce.Application.Features.Products.Queries.GetProductById;
+using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Shared.Queries;
@@ -19,7 +20,7 @@ namespace Ecommerce.Api.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [AllowAnonymous]
         [HttpGet("list", Name = "GetProductList")]
         [ProducesResponseType(typeof(IReadOnlyList<ProductVm>), (int)HttpStatusCode.OK)]
@@ -38,6 +39,16 @@ namespace Ecommerce.Api.Controllers
             query.Status = Domain.ProductStatus.Active;
             var paginationProduct = await _mediator.Send(query);
             return Ok(paginationProduct);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}", Name = "GetProductById")]
+        [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ProductVm>> GetProductById(int id)
+        {
+            var query = new GetProductByIdQuery(id);
+            var product = await _mediator.Send(query);
+            return Ok(product);
         }
     }
 }
