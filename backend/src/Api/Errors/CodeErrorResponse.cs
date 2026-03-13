@@ -14,13 +14,12 @@ namespace Ecommerce.Api.Errors
             StatusCode = statusCode;
             if (message != null)
             {
-                Message = new string[0];
-                var text = GetDefaultMessageStatusCode(statusCode);
-                Message[0] = text;
+                Message = message;
             }
             else
             {
-                Message = message;
+                var text = GetDefaultMessageStatusCode(statusCode);
+                Message = new string[] { text };
             }
         }
 

@@ -1,3 +1,4 @@
+using Ecommerce.Api.Middlewares;
 using Ecommerce.Application;
 using Ecommerce.Application.Extensions;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
@@ -95,6 +96,8 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
