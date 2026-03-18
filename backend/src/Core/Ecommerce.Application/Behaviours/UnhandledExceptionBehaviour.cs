@@ -21,7 +21,7 @@ namespace Ecommerce.Application.Behaviours
             {
                 var requestName = typeof(TRequest).Name;
                 _logger.LogError(ex, "Unhandled exception occurred while processing request {Name} {@Request}", requestName, request);
-                throw new Exception("ApplicationRequest with Errors");
+                throw;
             }
         }
     }
