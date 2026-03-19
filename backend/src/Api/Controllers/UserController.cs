@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.Contracts.Infrastructure;
 using Ecommerce.Application.Features.Auths.Users.Commands.LoginUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser;
+using Ecommerce.Application.Features.Auths.Users.Commands.SendPassword;
 using Ecommerce.Application.Features.Auths.Users.Vms;
 using Ecommerce.Application.Models.ImageManagement;
 using MediatR;
@@ -50,5 +51,13 @@ namespace Ecommerce.Api.Controllers
 
             return await _mediator.Send(request);
         }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password", Name = "ForgotPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<ActionResult<string>> ForgotPassword([FromBody] SendPasswordCommand request)
+        {
+            return await _mediator.Send(request);
         }
+    }
 }
