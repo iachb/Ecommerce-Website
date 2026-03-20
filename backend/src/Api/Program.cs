@@ -106,24 +106,27 @@ app.UseCors("CorsPolicy");
 app.MapControllers();
 
 // Application initialization
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    var service = scope.ServiceProvider;
-    var loggerFactory = service.GetRequiredService<ILoggerFactory>();
-    var configuration = service.GetRequiredService<IConfiguration>();
+    using (var scope = app.Services.CreateScope())
+    {
+        var service = scope.ServiceProvider;
+        var loggerFactory = service.GetRequiredService<ILoggerFactory>();
+        var configuration = service.GetRequiredService<IConfiguration>();
 
-    try
-    {
-        var context = service.GetRequiredService<EcommerceDbContext>();
-        var userManager = service.GetRequiredService<UserManager<User>>();
-        var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
-        await context.Database.MigrateAsync();
-        await EcommerceDbContextData.LoadDataAsync(context, userManager, roleManager, loggerFactory, configuration);
-    }
-    catch (Exception ex)
-    {
-        var logger = loggerFactory.CreateLogger<Program>();
-        logger.LogError(ex, "Error in migration");
+        try
+        {
+            var context = service.GetRequiredService<EcommerceDbContext>();
+            var userManager = service.GetRequiredService<UserManager<User>>();
+            var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+            await context.Database.MigrateAsync();
+            await EcommerceDbContextData.LoadDataAsync(context, userManager, roleManager, loggerFactory, configuration);
+        }
+        catch (Exception ex)
+        {
+            var logger = loggerFactory.CreateLogger<Program>();
+            logger.LogError(ex, "Error in migration");
+        }
     }
 }
 
