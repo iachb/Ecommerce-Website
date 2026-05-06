@@ -7,6 +7,7 @@ using Ecommerce.Application.Features.Auths.Users.Commands.SendPassword;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminStatusUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateUser;
+using Ecommerce.Application.Features.Auths.Users.Queries.GetUserById;
 using Ecommerce.Application.Features.Auths.Users.Vms;
 using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Models.ImageManagement;
@@ -17,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -115,6 +116,15 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<User>> UpdateAdminStatusUser([FromBody] UpdateAdminStatusUserCommand request)
         {
             return await _mediator.Send(request);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpGet("get-user-by-id", Name = "GetUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthResponse))]
+        public async Task<ActionResult<AuthResponse>> GetUserById(string id)
+        {
+            var query = new GetUserByIdQuery(id);
+            return await _mediator.Send(query);
         }
     }
 }
