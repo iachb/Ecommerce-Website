@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecommerce.Application.Features.Countries.Vms;
 using Ecommerce.Application.Features.Image.Queries;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
@@ -15,6 +16,7 @@ namespace Ecommerce.Application.Mappings
                 .ForMember(p => p.TotalReviews, x => x.MapFrom(a => a.Reviews == null ? 0 : a.Reviews.Count));
             CreateMap<Image, ImageVm>();
             CreateMap<Review, ReviewVm>();
+            CreateMap<Country, CountryVm>();
         }
     }
 }
