@@ -35,6 +35,9 @@ namespace Ecommerce.Api.Middlewares
                     case NotFoundException notFoundException:
                         statusCode = (int)HttpStatusCode.NotFound;
                         break;
+                    case UnauthorizedException unauthorizedException:
+                        statusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
                     case FluentValidation.ValidationException validationException:
                         statusCode = (int)HttpStatusCode.BadRequest;
                         var errors = validationException.Errors

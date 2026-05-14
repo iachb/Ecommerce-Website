@@ -31,13 +31,14 @@ namespace Ecommerce.Application.Features.Auths.Users.Commands.LoginUser
 
         public async Task<AuthResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email!) ?? throw new NotFoundException(nameof(User), request.Email!);
+            var user = await _userManager.FindByEmailAsync(request.Email!);
+            if (user is null) throw new UnauthorizedException("Username or password are incorrect. Please try again.");
 
-            if (!user.IsActive) throw new Exception("Your account is not active. Please contact support.");
+            if (!user.IsActive) throw new Exception("Your account is not active. Please contact support."); 
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password!, false);
 
-            if (!result.Succeeded) throw new Exception("Username or password are incorrect. Please try again.");
+            if (!result.Succeeded) throw new UnauthorizedException("Username or password are incorrect. Please try again.");
 
             var mailingAddress = await _unitOfWork.Repository<Address>().GetEntityAsync(
                 predicate: x => x.Username == user.UserName
