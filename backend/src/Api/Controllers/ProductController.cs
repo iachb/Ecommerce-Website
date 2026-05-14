@@ -1,12 +1,17 @@
-﻿using Ecommerce.Application.Features.Products.Queries.GetProductById;
+﻿using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.Commands.CreateProduct;
+using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
+using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Features.Shared.Queries;
+using Ecommerce.Infrastructure.ImageCloudinary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Ecommerce.Application.Models.ImageManagement;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -15,10 +20,12 @@ namespace Ecommerce.Api.Controllers
     public class ProductController : ControllerBase
     {
         private IMediator _mediator;
+        private IManageImageService _manageImageService;
 
-        public ProductController(IMediator mediator)
+        public ProductController(IMediator mediator, IManageImageService manageImageService)
         {
             _mediator = mediator;
+            _manageImageService = manageImageService;
         }
 
         [AllowAnonymous]
@@ -49,6 +56,39 @@ namespace Ecommerce.Api.Controllers
             var query = new GetProductByIdQuery(id);
             var product = await _mediator.Send(query);
             return Ok(product);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpPost("create", Name = "CreateProduct")]
+        [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ProductVm>> CreateProduct([FromForm] CreateProductCommand request)
+        {
+            var listPhotoUrls = new List<CreateProductImageCommand>();
+
+            if (request.Photos != null)
+            {
+                foreach (var photo in request.Photos)
+                {
+                    var uploadResult = await _manageImageService.UploadImage(new ImageData
+                    {
+                        ImageStream = photo.OpenReadStream(),
+                        Name = photo.Name
+                    });
+
+                    if (uploadResult != null)
+                    {
+                        var photoCommand = new CreateProductImageCommand
+                        {
+                            Url = uploadResult?.Url
+                        };
+                        listPhotoUrls.Add(photoCommand);
+                    }
+                }
+            }
+
+            request.ImageUrls = listPhotoUrls;
+
+            return await _mediator.Send(request);
         }
     }
 }

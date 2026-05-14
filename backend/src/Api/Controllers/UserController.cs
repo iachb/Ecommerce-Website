@@ -62,7 +62,8 @@ namespace Ecommerce.Api.Controllers
                 request.PhotoUrl = resultImage.Url;
             }
 
-            return await _mediator.Send(request);
+            var result = await _mediator.Send(request);
+            return Ok(result);
         }
 
         [AllowAnonymous]
@@ -104,7 +105,8 @@ namespace Ecommerce.Api.Controllers
                 request.ImageUrl = resultImage.Url;
             }
 
-            return await _mediator.Send(request);
+            var result = await _mediator.Send(request);
+            return Ok(result);
         }
 
         [Authorize(Roles = Role.ADMIN)]
@@ -129,7 +131,8 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<AuthResponse>> GetUserById(string id)
         {
             var query = new GetUserByIdQuery(id);
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("get-user-by-token", Name = "GetUserByToken")]
@@ -137,7 +140,8 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<AuthResponse>> GetUserByToken()
         {
             var query = new GetUserByTokenQuery();
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [Authorize(Roles = Role.ADMIN)]
@@ -146,7 +150,8 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<AuthResponse>> GetUserByUsername(string username)
         {
             var query = new GetUserByUsernameQuery(username);
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [Authorize(Roles = Role.ADMIN)]
