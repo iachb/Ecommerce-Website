@@ -20,8 +20,6 @@ namespace Ecommerce.Application.Features.Products.Commands.CreateProduct
             var productEntity = _mapper.Map<Product>(request);
             await _unitOfWork.Repository<Product>().AddAsync(productEntity);
 
-            await _unitOfWork.Complete();
-
             if (request.ImageUrls is not null && request.ImageUrls.Count > 0)
             {
                 // Set the ProductId for each image before saving

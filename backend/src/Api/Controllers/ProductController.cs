@@ -6,12 +6,12 @@ using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Features.Shared.Queries;
-using Ecommerce.Infrastructure.ImageCloudinary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Ecommerce.Application.Models.ImageManagement;
+using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -62,6 +62,39 @@ namespace Ecommerce.Api.Controllers
         [HttpPost("create", Name = "CreateProduct")]
         [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ProductVm>> CreateProduct([FromForm] CreateProductCommand request)
+        {
+            var listPhotoUrls = new List<CreateProductImageCommand>();
+
+            if (request.Photos != null)
+            {
+                foreach (var photo in request.Photos)
+                {
+                    var uploadResult = await _manageImageService.UploadImage(new ImageData
+                    {
+                        ImageStream = photo.OpenReadStream(),
+                        Name = photo.Name
+                    });
+
+                    if (uploadResult != null)
+                    {
+                        var photoCommand = new CreateProductImageCommand
+                        {
+                            Url = uploadResult?.Url
+                        };
+                        listPhotoUrls.Add(photoCommand);
+                    }
+                }
+            }
+
+            request.ImageUrls = listPhotoUrls;
+
+            return await _mediator.Send(request);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpPut("update", Name = "UpdateProduct")]
+        [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ProductVm>> UpdateProduct([FromForm] UpdateProductCommand request)
         {
             var listPhotoUrls = new List<CreateProductImageCommand>();
 
