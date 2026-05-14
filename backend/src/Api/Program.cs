@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -84,7 +85,46 @@ builder.Services.AddCors(options =>
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var controllerDocNames = typeof(Program).Assembly
+        .GetTypes()
+        .Where(t => t.IsClass
+            && !t.IsAbstract
+            && t.Name.EndsWith("Controller", StringComparison.Ordinal))
+        .Select(t => t.Name[..^"Controller".Length])
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .OrderBy(n => n)
+        .ToList();
+
+    options.SwaggerDoc("All", new OpenApiInfo { Title = "Ecommerce API", Version = "v1" });
+
+    foreach (var docName in controllerDocNames)
+    {
+        options.SwaggerDoc(docName, new OpenApiInfo { Title = $"{docName} API", Version = "v1" });
+    }
+
+    options.DocInclusionPredicate((docName, apiDesc) =>
+    {
+        if (string.Equals(docName, "All", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (!apiDesc.ActionDescriptor.RouteValues.TryGetValue("controller", out var controllerName))
+        {
+            return false;
+        }
+
+        return string.Equals(controllerName, docName, StringComparison.OrdinalIgnoreCase);
+    });
+
+    // Keep grouping inside each doc by controller as well
+    options.TagActionsBy(api =>
+        new[] { api.ActionDescriptor.RouteValues["controller"] ?? api.GroupName ?? "Default" });
+
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
 
 var app = builder.Build();
 
@@ -92,7 +132,25 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/All/swagger.json", "All");
+
+        var controllerDocNames = typeof(Program).Assembly
+            .GetTypes()
+            .Where(t => t.IsClass
+                && !t.IsAbstract
+                && t.Name.EndsWith("Controller", StringComparison.Ordinal))
+            .Select(t => t.Name[..^"Controller".Length])
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(n => n)
+            .ToList();
+
+        foreach (var docName in controllerDocNames)
+        {
+            options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", docName);
+        }
+    });
 }
 
 //app.UseHttpsRedirection();
