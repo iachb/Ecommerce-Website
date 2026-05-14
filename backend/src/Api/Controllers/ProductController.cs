@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Ecommerce.Application.Models.ImageManagement;
 using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
+using Ecommerce.Application.Features.Products.Commands.DeleteProduct;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -122,6 +123,15 @@ namespace Ecommerce.Api.Controllers
             request.ImageUrls = listPhotoUrls;
 
             return await _mediator.Send(request);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpDelete("status/{id}", Name = "DeleteProduct")]
+        [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ProductVm>> DeleteProduct(int id)
+        {
+            var command = new DeleteProductCommand(id);
+            return await _mediator.Send(command);
         }
     }
 }
