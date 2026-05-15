@@ -1,6 +1,9 @@
 ﻿using Ecommerce.Application.Features.Reviews.Commands.CreateReview;
+using Ecommerce.Application.Features.Reviews.Commands.DeleteReview;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
+using Ecommerce.Application.Models.Authorization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Api.Controllers
@@ -20,6 +23,15 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<ReviewVm>> CreateReview(CreateReviewCommand request)
         {
             var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpDelete("delete/{id}", Name = "DeleteReview")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ActionResult<Unit>))]
+        public async Task<ActionResult<Unit>> DeleteReview(int id)
+        {
+            var result = await _mediator.Send(new DeleteReviewCommand(id));
             return Ok(result);
         }
     }
