@@ -7,6 +7,7 @@ using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Reviews.Commands.CreateReview;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
+using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
 using Ecommerce.Domain;
 
 namespace Ecommerce.Application.Mappings
@@ -15,15 +16,9 @@ namespace Ecommerce.Application.Mappings
     {
         public MappingProfile()
         {
-
-            CreateMap<Category, CategoryVm>();
-            CreateMap<Image, ImageVm>();
-
             // Review
             CreateMap<Review, ReviewVm>();
             CreateMap<CreateReviewCommand, Review>();
-
-            CreateMap<Country, CountryVm>();
 
             // Product
             CreateMap<Product, ProductVm>()
@@ -32,6 +27,15 @@ namespace Ecommerce.Application.Mappings
             CreateMap<CreateProductCommand, Product>();
             CreateMap<CreateProductImageCommand, Image>();
             CreateMap<UpdateProductCommand, Product>();
+
+            // Shopping Cart
+            CreateMap<ShoppingCart, ShoppingCartVm>().ForMember(p => p.ShoppingCartId, x => x.MapFrom(a => a.ShoppingCartMasterId));
+            CreateMap<ShoppingCartItem, ShoppingCartItemVm>();
+
+            // Misc
+            CreateMap<Category, CategoryVm>();
+            CreateMap<Image, ImageVm>();
+            CreateMap<Country, CountryVm>();
         }
     }
 }
