@@ -3,10 +3,11 @@ using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
 using Ecommerce.Application.Persistence;
 using System.Linq.Expressions;
 using Ecommerce.Domain;
+using MediatR;
 
 namespace Ecommerce.Application.Features.ShoppingCart.Commands.Queries.GetShoppingCartById
 {
-    public class GetShoppingCartByIdQueryHandler : IsdRequestHandler<GetShoppingCartByIdQuery, ShoppingCartVm>
+    public class GetShoppingCartByIdQueryHandler : IRequestHandler<GetShoppingCartByIdQuery, ShoppingCartVm>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
