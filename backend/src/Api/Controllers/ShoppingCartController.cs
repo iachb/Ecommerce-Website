@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.Features.ShoppingCart.Commands.UpdateShoppingCart;
+﻿using Ecommerce.Application.Features.ShoppingCart.Commands.DeleteShoppingCartItem;
+using Ecommerce.Application.Features.ShoppingCart.Commands.UpdateShoppingCart;
 using Ecommerce.Application.Features.ShoppingCart.Queries.GetShoppingCartById;
 using Ecommerce.Application.Features.ShoppingCart.Vms;
 using MediatR;
@@ -35,6 +36,17 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<ShoppingCartVm>> UpdateShoppingCart(Guid id, [FromBody] UpdateShoppingCartCommand request)
         {
             request.ShoppingCartId = id;
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("item/{id}", Name = "DeleteShoppingCartItem")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ShoppingCartVm))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ShoppingCartVm>> DeleteShoppingCartItem(int id)
+        {
+            var request = new DeleteShoppingCartItemCommand() { Id = id };
             var result = await _mediator.Send(request);
             return Ok(result);
         }
