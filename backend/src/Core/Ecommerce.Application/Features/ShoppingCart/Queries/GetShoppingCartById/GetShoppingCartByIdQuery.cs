@@ -1,7 +1,7 @@
-﻿using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
+﻿using Ecommerce.Application.Features.ShoppingCart.Vms;
 using MediatR;
 
-namespace Ecommerce.Application.Features.ShoppingCart.Commands.Queries.GetShoppingCartById
+namespace Ecommerce.Application.Features.ShoppingCart.Queries.GetShoppingCartById
 {
     public class GetShoppingCartByIdQuery : IRequest<ShoppingCartVm>
     {

@@ -1,5 +1,5 @@
-﻿using Ecommerce.Application.Features.ShoppingCart.Commands.Queries.GetShoppingCartById;
-using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
+﻿using Ecommerce.Application.Features.ShoppingCart.Queries.GetShoppingCartById;
+using Ecommerce.Application.Features.ShoppingCart.Vms;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

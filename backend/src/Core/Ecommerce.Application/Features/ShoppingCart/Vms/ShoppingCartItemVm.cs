@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Application.Features.ShoppingCart.Commands.Vms
+﻿namespace Ecommerce.Application.Features.ShoppingCart.Vms
 {
     public class ShoppingCartItemVm
     {

@@ -7,7 +7,7 @@ using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Reviews.Commands.CreateReview;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
-using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
+using Ecommerce.Application.Features.ShoppingCart.Vms;
 using Ecommerce.Domain;
 
 namespace Ecommerce.Application.Mappings

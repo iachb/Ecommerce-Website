@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Ecommerce.Application.Features.ShoppingCart.Commands.Vms;
 using Ecommerce.Application.Persistence;
 using System.Linq.Expressions;
 using Ecommerce.Domain;
 using MediatR;
+using Ecommerce.Application.Features.ShoppingCart.Vms;
 
-namespace Ecommerce.Application.Features.ShoppingCart.Commands.Queries.GetShoppingCartById
+namespace Ecommerce.Application.Features.ShoppingCart.Queries.GetShoppingCartById
 {
     public class GetShoppingCartByIdQueryHandler : IRequestHandler<GetShoppingCartByIdQuery, ShoppingCartVm>
     {
