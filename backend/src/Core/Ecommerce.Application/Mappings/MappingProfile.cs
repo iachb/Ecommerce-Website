@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecommerce.Application.Features.Addresses.Vms;
 using Ecommerce.Application.Features.Categories.Vms;
 using Ecommerce.Application.Features.Countries.Vms;
 using Ecommerce.Application.Features.Image.Queries;
@@ -32,6 +33,9 @@ namespace Ecommerce.Application.Mappings
             CreateMap<ShoppingCart, ShoppingCartVm>().ForMember(p => p.ShoppingCartId, x => x.MapFrom(a => a.ShoppingCartMasterId));
             CreateMap<ShoppingCartItem, ShoppingCartItemVm>();
             CreateMap<ShoppingCartItemVm, ShoppingCartItem>();
+
+            // Address
+            CreateMap<Address, AddressVm>();
 
             // Misc
             CreateMap<Category, CategoryVm>();
