@@ -14,7 +14,6 @@ namespace Ecommerce.Application.Features.Auths.Users.Commands.LoginUser
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -31,14 +30,13 @@ namespace Ecommerce.Application.Features.Auths.Users.Commands.LoginUser
 
         public async Task<AuthResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email!);
-            if (user is null) throw new UnauthorizedException("Username or password are incorrect. Please try again.");
+            var user = await _userManager.FindByEmailAsync(request.Email!) ?? throw new UnauthorizedException("Email not found.");
 
             if (!user.IsActive) throw new Exception("Your account is not active. Please contact support."); 
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password!, false);
 
-            if (!result.Succeeded) throw new UnauthorizedException("Username or password are incorrect. Please try again.");
+            if (!result.Succeeded) throw new UnauthorizedException("Password is incorrect.");
 
             var mailingAddress = await _unitOfWork.Repository<Address>().GetEntityAsync(
                 predicate: x => x.Username == user.UserName
