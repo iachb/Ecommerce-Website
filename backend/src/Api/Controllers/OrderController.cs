@@ -7,6 +7,7 @@ using Ecommerce.Application.Features.Orders.Commands.CreateOrder;
 using Ecommerce.Application.Features.Orders.Commands.UpdateOrder;
 using Microsoft.AspNetCore.Authorization;
 using Ecommerce.Application.Models.Authorization;
+using Ecommerce.Application.Features.Orders.Queries.GetOrdersById;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -41,6 +42,19 @@ namespace Ecommerce.Api.Controllers
         public async Task<ActionResult<OrderVm>> UpdateOrder([FromBody] UpdateOrderCommand request)
         {
             return await _mediator.Send(request);
+        }
+
+        [HttpGet("{id}", Name = "GetOrderById")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderVm))]
+        public async Task<ActionResult<OrderVm>> GetOrderById(int id)
+        {
+            var query = new GetOrderByIdQuery(id);
+            var order = await _mediator.Send(query);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return Ok(order);
         }
     }
 }
