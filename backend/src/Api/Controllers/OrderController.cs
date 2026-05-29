@@ -11,6 +11,7 @@ using Ecommerce.Application.Features.Orders.Queries.GetOrdersById;
 using Ecommerce.Application.Features.Shared.Queries;
 using Ecommerce.Application.Features.Orders.Queries.PaginationOrders;
 using Ecommerce.Application.Contracts.Identity;
+using Ecommerce.Application.Features.Payments.Commands.CreatePayment;
 
 namespace Ecommerce.Api.Controllers
 {
