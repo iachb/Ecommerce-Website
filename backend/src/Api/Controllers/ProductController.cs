@@ -39,6 +39,15 @@ namespace Ecommerce.Api.Controllers
             return Ok(products);
         }
 
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpGet("pagination-admin", Name = "PaginationProductAdmin")]
+        [ProducesResponseType(typeof(PaginationVm<ProductVm>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PaginationVm<ProductVm>>> PaginationAdmin([FromQuery] PaginationProductsQuery query)
+        {
+            var paginationProduct = await _mediator.Send(query);
+            return Ok(paginationProduct);
+        }
+
         [AllowAnonymous]
         [HttpGet("pagination", Name = "PaginationProduct")]
         [ProducesResponseType(typeof(PaginationVm<ProductVm>), (int)HttpStatusCode.OK)]
