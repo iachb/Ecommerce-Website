@@ -8,6 +8,9 @@ using Ecommerce.Application.Features.Orders.Commands.UpdateOrder;
 using Microsoft.AspNetCore.Authorization;
 using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Features.Orders.Queries.GetOrdersById;
+using Ecommerce.Application.Features.Shared.Queries;
+using Ecommerce.Application.Features.Orders.Queries.PaginationOrders;
+using Ecommerce.Application.Contracts.Identity;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -16,10 +19,12 @@ namespace Ecommerce.Api.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IAuthService _authService;
 
-        public OrderController(IMediator mediator)
+        public OrderController(IMediator mediator, IAuthService authService)
         {
             _mediator = mediator;
+            _authService = authService;
         }
 
         [HttpPost("address", Name = "CreateAddress")]
@@ -46,6 +51,7 @@ namespace Ecommerce.Api.Controllers
 
         [HttpGet("{id}", Name = "GetOrderById")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderVm))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<OrderVm>> GetOrderById(int id)
         {
             var query = new GetOrderByIdQuery(id);
@@ -55,6 +61,24 @@ namespace Ecommerce.Api.Controllers
                 return NotFound();
             }
             return Ok(order);
+        }
+
+        [HttpGet("pagination-by-username", Name = "PaginationOrdersByUsername")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationVm<OrderVm>))]
+        public async Task<ActionResult<PaginationVm<OrderVm>>> PaginationOrdersByUsername([FromQuery] PaginationOrdersQuery paginationOrderParams)
+        {
+            paginationOrderParams.Username = _authService.GetSessionUser();
+            var pagination = await _mediator.Send(paginationOrderParams);
+            return Ok(pagination);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpGet("pagination-admin", Name = "PaginationOrder")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationVm<OrderVm>))]
+        public async Task<ActionResult<PaginationVm<OrderVm>>> PaginationOrder([FromQuery] PaginationOrdersQuery paginationOrderParams)
+        {
+            var pagination = await _mediator.Send(paginationOrderParams);
+            return Ok(pagination);
         }
     }
 }
