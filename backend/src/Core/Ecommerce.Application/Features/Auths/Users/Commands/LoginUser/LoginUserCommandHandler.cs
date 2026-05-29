@@ -18,11 +18,10 @@ namespace Ecommerce.Application.Features.Auths.Users.Commands.LoginUser
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public LoginUserCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IAuthService authService, IMapper mapper, IUnitOfWork unitOfWork)
+        public LoginUserCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, IAuthService authService, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _authService = authService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;

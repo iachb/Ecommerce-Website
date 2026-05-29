@@ -4,6 +4,9 @@ using Ecommerce.Application.Features.Addresses.Commands.CreateAddress;
 using Microsoft.AspNetCore.Mvc;
 using Ecommerce.Application.Features.Orders.Vms;
 using Ecommerce.Application.Features.Orders.Commands.CreateOrder;
+using Ecommerce.Application.Features.Orders.Commands.UpdateOrder;
+using Microsoft.AspNetCore.Authorization;
+using Ecommerce.Application.Models.Authorization;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -28,6 +31,14 @@ namespace Ecommerce.Api.Controllers
         [HttpPost(Name = "CreateOrder")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderVm))]
         public async Task<ActionResult<OrderVm>> CreateOrder([FromBody] CreateOrderCommand request)
+        {
+            return await _mediator.Send(request);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpPut(Name = "UpdateOrder")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderVm))]
+        public async Task<ActionResult<OrderVm>> UpdateOrder([FromBody] UpdateOrderCommand request)
         {
             return await _mediator.Send(request);
         }
