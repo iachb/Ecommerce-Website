@@ -155,7 +155,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         [Authorize(Roles = Role.ADMIN)]
-        [HttpGet("paginationAdmin", Name = "PaginationUser")]
+        [HttpGet("pagination-admin", Name = "PaginationUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationVm<User>))]
         public async Task<ActionResult<PaginationVm<User>>> PaginationUser([FromQuery] PaginationUsersQuery paginationQuery)
         {
