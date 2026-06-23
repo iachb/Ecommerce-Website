@@ -3,7 +3,7 @@
 > Full-stack e-commerce application built with ASP.NET Core (.NET 7) and React.
 
 ![.NET](https://img.shields.io/badge/.NET-7.0-512BD4?logo=dotnet)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![React](https://img.shields.io/badge/React-17-61DAFB?logo=react)
 ![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-latest-764ABC?logo=redux)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -22,7 +22,7 @@ The backend follows **Clean Architecture** with a **CQRS/MediatR** pattern. The 
 ```
 ecommerce/
 ├── backend/    # ASP.NET Core Web API (.NET 7)
-└── frontend/   # React 18 + Redux Toolkit
+└── frontend/   # React 17 + Redux Toolkit
 ```
 
 Each sub-project has its own README with setup instructions and architecture details.
