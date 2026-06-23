@@ -1,182 +1,175 @@
-# Ecommerce Backend (ASP.NET Core / .NET 7)
+# Ecommerce Backend
 
-Backend API for an e‑commerce application built with **ASP.NET Core (.NET 7)** following **Clean Architecture** and a **DDD (Domain‑Driven Design)**-inspired approach. The project uses **CQRS with MediatR**, **Entity Framework Core** for persistence, and a set of infrastructure services (auth, email, payments, images) decoupled from the domain.
+> REST API for a full-stack e-commerce application built with ASP.NET Core (.NET 7), Clean Architecture, and CQRS.
 
-> Backend folder: `backend/`  
-> Layered solution: `src/Api`, `src/Core`, `src/Infrastructure`
-
----
-
-## Stack / Technologies
-
-### Platform
-- **.NET 7** / **C# 11**
-- **ASP.NET Core Web API**
-- **Swagger / OpenAPI** (Swashbuckle)
-
-### Architecture & patterns
-- **Clean Architecture** (Api → Application → Domain → Infrastructure)
-- **CQRS** with **MediatR** (Commands / Queries)
-- **Unit of Work + Repository** (generic)
-- **Specification pattern** (paging, filters, sorting and includes)
-- **AutoMapper** (Domain ⇄ ViewModels / DTOs mapping)
-- **FluentValidation** (validation through the MediatR pipeline)
-
-### Security
-- **ASP.NET Identity** (usuarios/roles)
-- **JWT Bearer Authentication**
-- **Role-based authorization** + explicit anonymous endpoints (`[AllowAnonymous]`)
-
-### Integrations
-- **Stripe** (Payment Intents)
-- **Cloudinary** (image management)
-- **FluentEmail + SMTP (MailKit)** (email sending, password recovery)
-
-### Persistence
-- **Entity Framework Core 7**
-- Database currently configured for **SQL Server** (provider `UseSqlServer`).
+![.NET](https://img.shields.io/badge/.NET-7.0-512BD4?logo=dotnet)
+![C#](https://img.shields.io/badge/C%23-11-239120?logo=csharp)
+![EF Core](https://img.shields.io/badge/EF_Core-7-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
-## Project structure
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+- [Database](#database)
+- [API Reference](#api-reference)
+
+---
+
+## Overview
+
+This backend exposes a versioned REST API (`/api/v1/`) for a complete e-commerce flow: product catalog, shopping cart, user auth, image uploads, email-based password recovery, and Stripe payment processing.
+
+The solution follows **Clean Architecture** with a **DDD-inspired** domain model and **CQRS via MediatR**, keeping business logic strictly out of the API layer.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Runtime | .NET 7 / C# 11 |
+| Web framework | ASP.NET Core Web API |
+| ORM | Entity Framework Core 7 (SQL Server) |
+| Auth | ASP.NET Identity + JWT Bearer |
+| CQRS / Mediator | MediatR |
+| Validation | FluentValidation |
+| Mapping | AutoMapper |
+| Payments | Stripe (Payment Intents) |
+| Images | Cloudinary |
+| Email | FluentEmail + MailKit (SMTP) |
+| API docs | Swagger / OpenAPI (Swashbuckle) |
+
+---
+
+## Architecture
 
 ```
 backend/
-  src/
-	Api/                    # Entry layer: controllers, middleware, configuration
-	Core/
-	  Ecommerce.Domain/      # Domain entities and domain model
-	  Ecommerce.Application/ # CQRS, VMs/DTOs, validation, contracts, behaviors
-	Infrastructure/          # EF DbContext, repositories, UnitOfWork, external services
+└── src/
+    ├── Api/                        # Controllers, middleware, DI configuration
+    ├── Core/
+    │   ├── Ecommerce.Domain/       # Entities, base models (no dependencies)
+    │   └── Ecommerce.Application/  # CQRS handlers, DTOs, validators, interfaces
+    └── Infrastructure/             # EF DbContext, repositories, external services
 ```
 
-### Layers
+**Dependency rule:** `Api → Application → Domain` — Infrastructure implements Application interfaces and is never referenced by Domain or Application directly.
 
-#### `src/Api` (Presentation)
-- REST controllers: `ProductController`, `UserController`, `ShoppingCartController`, `PaymentController`, etc.
-- **Swagger** and **JWT** configuration.
-- **ExceptionMiddleware** to handle exceptions and return consistent responses.
+### Key patterns
 
-#### `src/Core/Ecommerce.Application` (Application)
-- Features organized as vertical slices (use cases):
-  - `Features/*/Commands/*` and `Features/*/Queries/*`
-- MediatR **behaviors**:
-  - `UnhandledExceptionBehaviour` (exception handling)
-  - `ValidationBehaviour` (FluentValidation execution)
-- Centralized **MappingProfile** (AutoMapper).
-- Infrastructure contracts (interfaces): `IAuthService`, `IEmailService`, `IManageImageService`, etc.
-
-#### `src/Core/Ecommerce.Domain` (Domain)
-- Business entities: `Product`, `Order`, `OrderItem`, `ShoppingCart`, `Address`, etc.
-- Base model `BaseDomainModel` (audit fields: created/modified).
-
-#### `src/Infrastructure` (Infrastructure)
-- `EcommerceDbContext` (EF Core + IdentityDbContext)
-- `RepositoryBase<T>` + `UnitOfWork`
-- External implementations:
-  - Email (`EmailService`)
-  - Cloudinary (`ManageImageService`)
-- `Migrations/` (EF Core migrations)
-- Seed / initial data (`EcommerceDbContextData.LoadDataAsync`)
+- **CQRS** — Commands mutate state; Queries return data. Handlers live in `Application/Features/*/Commands` and `Application/Features/*/Queries`.
+- **Repository + Unit of Work** — `IUnitOfWork.Repository<T>()` with a single `Complete()` commit.
+- **Specification pattern** — Encapsulates EF Core queries (filters, sorting, paging, includes) as reusable objects.
+- **MediatR pipeline behaviors** — `ValidationBehaviour` runs FluentValidation before every handler; `UnhandledExceptionBehaviour` catches and logs unhandled exceptions.
+- **ExceptionMiddleware** — Converts exceptions to consistent JSON error responses with appropriate HTTP status codes.
 
 ---
 
-## Key features
+## Getting Started
 
-### 1) CQRS + MediatR
-Endpoints (Controllers) delegate logic to **handlers** (`IRequestHandler`) and avoid business logic in the API layer.
+### Prerequisites
 
-- **Commands**: state-changing operations (create/update/delete).
-- **Queries**: reads (lists, detail, pagination).
+- [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+- SQL Server (local or remote)
+- Stripe account (for payments)
+- Cloudinary account (for image uploads)
+- SMTP credentials (for email)
 
-### 2) Repository + Unit of Work
-- `IUnitOfWork.Repository<TEntity>()` returns a generic repository.
-- Allows grouping operations and committing with `Complete()`.
-
-### 3) Specification pattern
-In infrastructure, specifications are evaluated for:
-- criteria (filters)
-- sorting
-- paging
-- includes (`Include`) with `AsSplitQuery` and `AsNoTracking`.
-
-This is mainly used for lists and pagination.
-
-### 4) Validation & error handling
-- **FluentValidation** validates requests before handlers run.
-- **ExceptionMiddleware** formats errors and HTTP status codes (400/401/404/500).
-
-### 5) AuthN/AuthZ with Identity + JWT
-- Identity manages users/roles.
-- JWT protects endpoints.
-- A global authorization filter is applied and selected endpoints are opened with `[AllowAnonymous]`.
-
-### 6) Images (Cloudinary)
-- Image uploads from `multipart/form-data` endpoints.
-- `ManageImageService` encapsulates the Cloudinary integration.
-
-### 7) Emails (password recovery)
-- `FluentEmail` + SMTP sending.
-- Reset URL built using `EmailFluentSettings.BaseUrlClient`.
-
-### 8) Payments (Stripe)
-- Create/update `PaymentIntent`.
-- `PaymentIntentId` and `ClientSecret` are stored in the `Order` entity.
-
----
-## Running the project
-
-Requirements:
-- SDK **.NET 7**
-- An instance of the DB (configured in `appsettings.json` connection string, currently SQL Server).
-
-From `backend/`:
+### Run locally
 
 ```bash
+# From the backend/ directory
+
+# 1. Copy the example config and fill in your credentials
+cp src/Api/appsettings.example.json src/Api/appsettings.json
+
+# 2. Restore, build, and run
 dotnet restore
 dotnet build
 dotnet run --project src/Api/Ecommerce.Api.csproj
 ```
 
-Swagger:
-- In development, open `/swagger` (see `launchSettings.json`).
+Swagger UI is available at `https://localhost:{port}/swagger` in the `Development` environment.
 
 ---
 
-## Migrations & database (EF Core)
+## Configuration
 
-Migrations live in: `src/Infrastructure/Migrations`.
+Copy `appsettings.json` and fill in the required values. The app reads configuration from `appsettings.json` and `appsettings.Development.json`.
 
-Typical commands (same pattern used in this repo):
+```jsonc
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=...;Database=EcommerceDb;..."
+  },
+  "JwtSettings": {
+    "Key": "<secret>",
+    "Issuer": "<issuer>",
+    "Audience": "<audience>",
+    "DurationInMinutes": 60
+  },
+  "StripeSettings": {
+    "PublishableKey": "pk_test_...",
+    "SecretKey": "sk_test_..."
+  },
+  "CloudinarySettings": {
+    "CloudName": "...",
+    "ApiKey": "...",
+    "ApiSecret": "..."
+  },
+  "EmailFluentSettings": {
+    "Host": "smtp.example.com",
+    "Port": 587,
+    "UserName": "...",
+    "Password": "...",
+    "BaseUrlClient": "https://your-frontend-url.com"
+  }
+}
+```
+
+---
+
+## Database
+
+Migrations live in `src/Infrastructure/Migrations/`.
 
 ```bash
-dotnet ef migrations add <NombreMigracion> \
+# Add a new migration
+dotnet ef migrations add <MigrationName> \
   -p src/Infrastructure/Ecommerce.Infrastructure.csproj \
   -s src/Api/Ecommerce.Api.csproj \
   -c EcommerceDbContext
 
+# Apply migrations
 dotnet ef database update \
   -p src/Infrastructure/Ecommerce.Infrastructure.csproj \
   -s src/Api/Ecommerce.Api.csproj \
   -c EcommerceDbContext
 ```
 
-In `Development`, the API automatically runs:
-- `context.Database.MigrateAsync()`
-- `EcommerceDbContextData.LoadDataAsync(...)` (seed)
+In the `Development` environment the API automatically runs `MigrateAsync()` and seeds initial data on startup via `EcommerceDbContextData.LoadDataAsync`.
 
 ---
 
-## Endpoints (high-level)
+## API Reference
 
-The API is versioned under `api/v1/[controller]`.
+All routes are prefixed with `/api/v1/`. Full interactive docs are available via Swagger at runtime.
 
-Examples (see `src/Api/Controllers`):
-- **Users**: login/register, password recovery, roles, admin pagination.
-- **Products**: list, detail, pagination, CRUD (admin), images.
-- **ShoppingCart**: get cart, update, delete items.
-- **Payments**: create payment (Stripe).
-
-Swagger is generated with an `All` document and also one per controller (configured in `Program.cs`).
+| Resource | Endpoints |
+|---|---|
+| **Auth / Users** | `POST /login`, `POST /register`, password recovery, role management |
+| **Products** | `GET` list + detail with pagination, `POST/PUT/DELETE` (admin), image upload |
+| **Shopping Cart** | `GET` cart, `PUT` update items, `DELETE` remove items |
+| **Payments** | `POST` create Stripe Payment Intent |
 
 ---
+
+## License
+
+MIT
