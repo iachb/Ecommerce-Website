@@ -1,10 +1,18 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import MetaData from "./MetaData";
+import { useDispatch } from "react-redux";
+import { getProducts } from "../../actions/productAction";
 
 const Home = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
   return (
     <Fragment>
-      <MetaData title={'Best products online'}/>
+      <MetaData title={"Best products online"} />
       <section id="products" className="container mt-5">
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-3 my-3">
