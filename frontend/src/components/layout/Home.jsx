@@ -3,6 +3,7 @@ import MetaData from "./MetaData";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../actions/productAction";
 import Product from "../product/Product";
+import Loader from "./Loader";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -11,14 +12,16 @@ const Home = () => {
     dispatch(getProducts());
   }, [dispatch]);
 
-  const { products } = useSelector((state) => state.products);
+  const { products, loading, error } = useSelector((state) => state.products);
 
   return (
     <Fragment>
       <MetaData title={"Best products online"} />
       <section id="products" className="container mt-5">
         <div className="row">
-          {products ? (
+          {loading ? (
+            <Loader />
+          ) : products && products.length > 0 ? (
             products.map((product) => (
               <Product key={product._id} product={product} col={4} />
             ))
