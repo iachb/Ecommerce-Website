@@ -5,6 +5,7 @@ import { getProducts } from "../../actions/productAction";
 import Product from "../product/Product";
 import Loader from "./Loader";
 import { useAlert } from "react-alert";
+import Products from "../products/Products";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -28,15 +29,7 @@ const Home = () => {
       <MetaData title={"Best products online"} />
       <section id="products" className="container mt-5">
         <div className="row">
-          {loading ? (
-            <Loader />
-          ) : products && products.length > 0 ? (
-            products.map((product) => (
-              <Product key={product._id} product={product} col={4} />
-            ))
-          ) : (
-            <h1>No products found</h1>
-          )}
+          <Products products={products} col={4} loading={loading} />
         </div>
       </section>
     </Fragment>
