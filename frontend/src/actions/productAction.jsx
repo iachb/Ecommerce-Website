@@ -12,3 +12,14 @@ export const getProducts = createAsyncThunk(
     }
   },
 );
+
+export const getProductById = createAsyncThunk(
+  "products/getProductById",
+  async (id, { rejectWithValue }) => {
+    try {
+      return await axios.get(`/api/v1/Product/${id}`);
+    } catch (err) {
+      return rejectWithValue(`Errors: ${err.message}`);
+    }
+  },
+);
