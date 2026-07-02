@@ -62,12 +62,6 @@ body {
   color: #f8ce0b;
 }
 
-/* ==========================================================================
-   LEGACY / UNUSED — styles below target Bootstrap classes (CDN removed) and
-   components not built yet (Cart, Login, Admin, Checkout, Pagination, etc.).
-   Safe to delete; kept as course reference. Rebuild these in Tailwind.
-   ========================================================================== */
-
 /* Cart */
 
 .cart-item {
@@ -448,17 +442,4 @@ ul.CTAs a {
 
 .star:first-child {
   padding-left: 0;
-}
-
-.orange {
-  color: #fa9c23;
-}
-
-.yellow {
-  color: #fdcc0d;
-}
-
-.review_user {
-  font-size: 0.8rem;
-  color: grey;
 }
