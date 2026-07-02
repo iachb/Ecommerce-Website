@@ -2,8 +2,6 @@ import React, { Fragment, useEffect } from "react";
 import MetaData from "./MetaData";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../actions/productAction";
-import Product from "../product/Product";
-import Loader from "./Loader";
 import { useAlert } from "react-alert";
 import Products from "../products/Products";
 
@@ -27,9 +25,9 @@ const Home = () => {
   return (
     <Fragment>
       <MetaData title={"Best products online"} />
-      <section id="products" className="container mt-5">
-        <div className="row">
-          <Products products={products} col={4} loading={loading} />
+      <section id="products" className="mt-10">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Products products={products} loading={loading} />
         </div>
       </section>
     </Fragment>

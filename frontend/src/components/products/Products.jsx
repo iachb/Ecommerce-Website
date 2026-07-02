@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import Loader from "../layout/Loader";
 import Product from "../product/Product";
 
-const Products = ({ products, col, loading }) => {
+const Products = ({ products, loading }) => {
   if (loading) {
     return <Loader />;
   }
@@ -11,7 +11,7 @@ const Products = ({ products, col, loading }) => {
     <Fragment>
       {products ? (
         products.map((product) => (
-          <Product key={product._id} product={product} col={col} />
+          <Product key={product._id} product={product} />
         ))
       ) : (
         <Loader />
