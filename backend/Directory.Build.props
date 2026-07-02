@@ -1,0 +1,8 @@
+<Project>
+  <ItemGroup>
+    <!-- ponytail: AutoMapper 14 is the last MIT release; GHSA-rvv3-g6hj-g44x (DoS via ~25k-deep
+         object graphs) is blocked upstream by ASP.NET Core's default JSON MaxDepth (64).
+         To patch properly, upgrade to AutoMapper 15.1.1+ (commercial dual-license). -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-rvv3-g6hj-g44x" />
+  </ItemGroup>
+</Project>

@@ -1,10 +1,10 @@
 # Ecommerce Backend
 
-> REST API for a full-stack e-commerce application built with ASP.NET Core (.NET 7), Clean Architecture, and CQRS.
+> REST API for a full-stack e-commerce application built with ASP.NET Core (.NET 10), Clean Architecture, and CQRS.
 
-![.NET](https://img.shields.io/badge/.NET-7.0-512BD4?logo=dotnet)
-![C#](https://img.shields.io/badge/C%23-11-239120?logo=csharp)
-![EF Core](https://img.shields.io/badge/EF_Core-7-blue)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)
+![C#](https://img.shields.io/badge/C%23-14-239120?logo=csharp)
+![EF Core](https://img.shields.io/badge/EF_Core-10-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -33,9 +33,9 @@ The solution follows **Clean Architecture** with a **DDD-inspired** domain model
 
 | Layer | Technology |
 |---|---|
-| Runtime | .NET 7 / C# 11 |
+| Runtime | .NET 10 / C# 14 |
 | Web framework | ASP.NET Core Web API |
-| ORM | Entity Framework Core 7 (SQL Server) |
+| ORM | Entity Framework Core 10 (SQL Server) |
 | Auth | ASP.NET Identity + JWT Bearer |
 | CQRS / Mediator | MediatR |
 | Validation | FluentValidation |
@@ -75,7 +75,7 @@ backend/
 
 ### Prerequisites
 
-- [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - SQL Server (local or remote)
 - Stripe account (for payments)
 - Cloudinary account (for image uploads)
@@ -109,7 +109,7 @@ Copy `appsettings.json` and fill in the required values. The app reads configura
     "DefaultConnection": "Server=...;Database=EcommerceDb;..."
   },
   "JwtSettings": {
-    "Key": "<secret>",
+    "Key": "<secret, minimum 64 bytes — tokens are signed with HMAC-SHA512>",
     "Issuer": "<issuer>",
     "Audience": "<audience>",
     "DurationInMinutes": 60
