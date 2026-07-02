@@ -31,8 +31,8 @@ export const getProductPagination = createAsyncThunk(
     try {
       params = httpParams(params);
       const paramUrl = new URLSearchParams(params).toString();
-      var results = await axios.get(`/api/v1/Product/pagination?${paramUrl}`);
-      return (await results).data;
+      const results = await axios.get(`/api/v1/Product/pagination?${paramUrl}`);
+      return results.data;
     } catch (err) {
       return rejectWithValue(`Errors: ${err.message}`);
     }
