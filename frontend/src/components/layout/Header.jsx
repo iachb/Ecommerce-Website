@@ -4,11 +4,11 @@ const Header = () => {
   return (
     <Fragment>
       <nav className="flex flex-wrap items-center gap-4 bg-navy px-6 py-3">
-        <div className="w-full md:w-1/4">
+        <div className="shrink-0">
           <img src="/images/logo_vaxi.png" alt="logo" className="h-10" />
         </div>
 
-        <div className="w-full md:w-1/2">
+        <div className="order-3 w-full md:order-none md:min-w-0 md:flex-1">
           <div className="flex">
             <input
               type="text"
@@ -24,7 +24,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex w-full items-center justify-center gap-3 md:w-1/4">
+        <div className="ml-auto flex shrink-0 items-center gap-3 md:ml-0">
           <button className="rounded bg-brand px-6 py-2 font-medium text-slate-900">
             Login
           </button>
