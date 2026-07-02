@@ -4,7 +4,7 @@ import { getProductPagination } from "../actions/productAction";
 export const initialState = {
   products: [],
   count: 0,
-  index: 1,
+  pageIndex: 1,
   pageSize: 10,
   pageCount: 0,
   loading: false,
@@ -26,7 +26,7 @@ export const productPaginationSlice = createSlice({
       state.pageIndex = 1;
     },
     setPageIndex: (state, action) => {
-      state.index = action.payload.index;
+      state.pageIndex = action.payload.pageIndex;
     },
     updatePrice: (state, action) => {
       state.minPrice = action.payload.price[0];
