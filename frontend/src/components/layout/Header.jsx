@@ -1,38 +1,35 @@
 import React, { Fragment } from "react";
-import '../../App.css'
 
 const Header = () => {
   return (
     <Fragment>
-      <nav className="navbar row">
-        <div className="col-12 col-md-3">
-          <div className="navbar-brand">
-            <img src="/images/logo_vaxi.png" />
-          </div>
+      <nav className="flex flex-wrap items-center gap-4 bg-navy px-6 py-3">
+        <div className="w-full md:w-1/4">
+          <img src="/images/logo_vaxi.png" alt="logo" className="h-10" />
         </div>
-        <div className="col-12 col-md-6 mt-2 mt-md-0">
-          <div className="input-group">
+
+        <div className="w-full md:w-1/2">
+          <div className="flex">
             <input
               type="text"
-              id="search_field"
-              className="form-control"
               placeholder="Enter Product Name ..."
+              className="min-w-0 flex-1 rounded-l bg-white px-4 py-2 text-slate-900 focus:outline-none"
             />
-            <div className="input-group-append">
-              <button id="search_btn" className="btn">
-                <i className="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </div>
+            <button
+              className="rounded-r bg-brand px-4 text-slate-900"
+              aria-label="Search"
+            >
+              <i className="fa fa-search" aria-hidden="true" />
+            </button>
           </div>
         </div>
-        <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
-          <button className="btn" id="login_btn">
+
+        <div className="flex w-full items-center justify-center gap-3 md:w-1/4">
+          <button className="rounded bg-brand px-6 py-2 font-medium text-slate-900">
             Login
           </button>
-          <span id="cart" className="ml-3">
-            Cart
-          </span>
-          <span className="ml-1" id="cart_count">
+          <span className="text-white">Cart</span>
+          <span className="rounded bg-brand px-2 py-0.5 text-sm font-bold text-black">
             2
           </span>
         </div>

@@ -1,3 +1,11 @@
+@import "tailwindcss";
+
+/* Amazon palette as Tailwind tokens -> bg-brand, text-brand, bg-navy, etc. */
+@theme {
+  --color-brand: #febd69;
+  --color-navy: #232f3e;
+}
+
 html,
 body {
   font-family: 'Amazon Ember';
@@ -26,44 +34,10 @@ body {
   border-radius: 5px;
 }
 
-nav {
-  background-color: #232f3e;
-  padding: 1rem 1rem;
-}
-
-#search_btn {
-  background-color: #febd69;
-}
-
-.input-group {
-  width: 90%;
-  margin-right: 35%;
-}
-
-#search_field {
-  height: 2.4rem;
-  padding: 1rem;
-}
-
-#login_btn,
 #view_btn {
   background-color: #febd69;
   padding: 0.4rem 1.8rem;
   font-family: calibri;
-}
-
-#cart {
-  font-size: 1rem;
-  color: white;
-}
-
-#cart_count {
-  background-color: #febd69;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.2rem;
-  color: black;
-  font-weight: bold;
-  font-size: 0.9rem;
 }
 
 /* Home page */
