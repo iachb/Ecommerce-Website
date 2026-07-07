@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Search from "./Search";
 
 const Header = () => {
   return (
@@ -8,20 +9,8 @@ const Header = () => {
           <img src="/images/logo_vaxi.png" alt="logo" className="h-10" />
         </div>
 
-        <div className="order-3 w-full md:order-none md:min-w-0 md:flex-1">
-          <div className="flex">
-            <input
-              type="text"
-              placeholder="Enter Product Name ..."
-              className="min-w-0 flex-1 rounded-l bg-white px-4 py-2 text-slate-900 focus:outline-none"
-            />
-            <button
-              className="rounded-r bg-brand px-4 text-slate-900"
-              aria-label="Search"
-            >
-              <i className="fa fa-search" aria-hidden="true" />
-            </button>
-          </div>
+        <div className="order-3 flex w-full justify-center md:order-none md:min-w-0 md:flex-1">
+          <Search />
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-3 md:ml-0">

@@ -38,7 +38,6 @@ const Home = () => {
   }, [error, alert]);
 
   useEffect(() => {
-    // ponytail: error NOT a dep on purpose — including it re-fired the fetch on every rejection → infinite loop
     dispatch(
       getProductPagination({
         pageIndex: pageIndex,
