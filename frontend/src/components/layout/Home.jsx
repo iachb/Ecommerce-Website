@@ -5,7 +5,11 @@ import { getProducts, getProductPagination } from "../../actions/productAction";
 import { useAlert } from "react-alert";
 import Products from "../products/Products";
 import Pagination from "react-js-pagination";
-import { setPageIndex, updatePrice } from "../../slices/productPaginationSlice";
+import {
+  setPageIndex,
+  updateCategory,
+  updatePrice,
+} from "../../slices/productPaginationSlice";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
@@ -15,6 +19,8 @@ const Range = createSliderWithTooltip(Slider.Range);
 const Home = () => {
   const [price, setPrice] = useState([1, 1000]);
   const dispatch = useDispatch();
+
+  const { categories } = useSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(getProducts());
@@ -82,6 +88,14 @@ const Home = () => {
     dispatch(updatePrice({ price: value }));
   }
 
+  function onChangeCategory(category) {
+    dispatch(
+      updateCategory({
+        category: category.id,
+      }),
+    );
+  }
+
   return (
     <Fragment>
       <MetaData title={"Best products online"} />
@@ -104,6 +118,21 @@ const Home = () => {
                   onChange={onChangePrice}
                   onAfterChange={onAfterChange}
                 />
+                <hr className="mt-5" />
+                <div className="mt-5">
+                  <h4 className="mb-3 text-lg font-medium">Categories</h4>
+                  <ul>
+                    {categories.map((category) => (
+                      <li
+                        key={category.id}
+                        className="cursor-pointer py-1 text-gray-700 hover:text-blue-500"
+                        onClick={() => onChangeCategory(category)}
+                      >
+                        {category.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           )}
