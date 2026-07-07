@@ -73,11 +73,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // CORS
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader()
+    options.AddPolicy("CorsPolicy", builder => builder.WithOrigins(allowedOrigins)
+        .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+        .WithHeaders("Content-Type", "Authorization")
     );
 });
 
@@ -174,9 +175,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("CorsPolicy");
 
 app.MapControllers();
 
