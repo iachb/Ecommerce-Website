@@ -1,7 +1,7 @@
 import "./App.css";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-import Home from "./components/layout/Home";
+import Home from "./components/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProductDetail from "./components/product/ProductDetail";
 import { useDispatch } from "react-redux";
