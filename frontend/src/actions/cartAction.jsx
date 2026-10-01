@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../utilies/axios";
+import axios from "../utilities/axios";
 
 export const saveAddressInfo = createAsyncThunk(
   "shoppingCart/saveAddressInfo",
