@@ -30,12 +30,12 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    dispatch(login({ email, password }));
   };
 
   if (loading)
   {
-    return <p><Loader /></p>;
+    return <Loader />;
   }
 
   return (

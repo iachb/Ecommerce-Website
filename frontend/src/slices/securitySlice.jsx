@@ -48,7 +48,7 @@ export const securitySlice = createSlice({
     },
     [login.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
@@ -66,7 +66,7 @@ export const securitySlice = createSlice({
     },
     [register.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
@@ -85,7 +85,7 @@ export const securitySlice = createSlice({
     },
     [update.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
@@ -101,7 +101,7 @@ export const securitySlice = createSlice({
     },
     [updatePassword.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
@@ -119,7 +119,7 @@ export const securitySlice = createSlice({
     },
     [getUser.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
@@ -137,7 +137,7 @@ export const securitySlice = createSlice({
     },
     [saveAddressInfo.rejected]: (state, action) => {
       state.loading = false;
-      state.errors = action.payload;
+      state.errors = [action.payload];
       state.isAuthenticated = false;
       state.user = null;
     },
